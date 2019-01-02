@@ -10,7 +10,8 @@ var videoSchema = new Schema({
     thumbnailUri: String,
     description: String,
     commentCount: Number,
-    starsCount: Number
+    starsCount: Number,
+    publishTime: Date
 })
 
 module.exports = mongoose.model('videos', videoSchema);
