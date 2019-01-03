@@ -5,6 +5,21 @@ var likeModel = require('../models/likes');
 var videoModel = require('../models/videos');
 var concernModel = require('../models/concerns');
 
+var multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'videos/')
+    },
+    filename: function(req, file, cb) {
+        cb(null, req.query.authorId + '-' + Date.now() + '-' + file.originalname);
+    }
+})
+
+var upload = multer({
+    storage: storage
+});
+
 router.post('/star', function(req, res) {
     var postData = {
         userId: req.query.userId,
@@ -29,11 +44,11 @@ router.post('/like', function(req, res) {
     })
 })
 
-router.post('/publish', function(req, res) {
+router.post('/publish', upload.single('file') function(req, res) {
     var postData = {
         id: (new Date()).getTime,
         title: req.query.title,
-        author: req.query.author,
+        authorId: req.query.authorId,
         duration: req.query.duration,
         category: req.query.category,
         thumbnailUri: req.query.thumbnailUri,
