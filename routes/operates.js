@@ -44,7 +44,7 @@ router.post('/like', function(req, res) {
     })
 })
 
-router.post('/publish', upload.single('file') function(req, res) {
+router.post('/publish', upload.single('file'), function(req, res) {
     var postData = {
         id: (new Date()).getTime,
         title: req.query.title,
