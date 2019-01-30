@@ -6,6 +6,7 @@ var videoModel = require('../models/videos');
 var concernModel = require('../models/concerns');
 
 var multer = require('multer');
+var moment = require('moment');
 
 var storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -46,16 +47,18 @@ router.post('/like', function(req, res) {
 
 router.post('/publish', upload.single('file'), function(req, res) {
     var postData = {
-        id: (new Date()).getTime,
+        id: (new Date()).getTime(),
         title: req.query.title,
+        subTitle: req.query.subTitle,
         authorId: req.query.authorId,
+        avatorUri: req.query.avatorUri,
         duration: req.query.duration,
         category: req.query.category,
         thumbnailUri: req.query.thumbnailUri,
         description: req.query.description,
         commentCount: 0,
         starsCount: 0,
-        publishTime: req.query.publishTime
+        publishTime: moment().format('YYYY-MM-DD')
     }
 
     videoModel.create(postData, function(err, data) {
