@@ -10,6 +10,7 @@ var videoSchema = new Schema({
     duration: String,
     category: String,
     thumbnailUri: String,
+    videoUri: String,
     description: String,
     commentCount: Number,
     starsCount: Number,

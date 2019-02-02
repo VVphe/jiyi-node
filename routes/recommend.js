@@ -80,9 +80,10 @@ router.get('/everydayPick', function(req, res) {
         if (err) throw err;
         if (data && data.length > 0) {
             data = data[0];
-        }
-
-        res.send(data);
+            res.send(data);
+        } else {
+            res.send(null);
+        } 
     })
 })
 

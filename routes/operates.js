@@ -4,6 +4,7 @@ var starModel = require('../models/stars');
 var likeModel = require('../models/likes');
 var videoModel = require('../models/videos');
 var concernModel = require('../models/concerns');
+var commmentModel = require('../models/commends');
 
 var multer = require('multer');
 var moment = require('moment');
@@ -23,8 +24,8 @@ var upload = multer({
 
 router.post('/star', function(req, res) {
     var postData = {
-        userId: req.query.userId,
-        videoId: req.query.videoId
+        userId: req.body.userId,
+        videoId: req.body.videoId
     }
 
     starModel.create(postData, function(err, data) {
@@ -35,13 +36,71 @@ router.post('/star', function(req, res) {
 
 router.post('/like', function(req, res) {
     var postData = {
-        userId: req.query.userId,
-        videoId: req.query.videoId
+        userId: req.body.userId,
+        videoId: req.query.videoId,
+        subTitle: req.body.subTitle,
+        authorId: req.body.authorId,
+        avatorUri: req.body.avatorUri,
+        duration: req.body.duration,
+        category: req.body.category,
+        thumbnailUri: req.body.thumbnailUri,
+        videoUri: req.body.videoUri,
+        description: req.body.description,
+        commentCount: req.body.commentCount,
+        starsCount: req.body.starsCount,
+        publishTime: req.body.publishTime
     }
 
     likeModel.create(postData, function(err, data) {
         if (err) throw err;
         res.send(data);
+    })
+})
+
+router.post('/comment', function(req, res) {
+    var postData = {
+        videoId: req.body.videoId,
+        userId: req.body.userId,
+        username: req.body.username,
+        avator: req.body.avator,
+        content: req.body.content,
+        type: 'comment',
+        date: moment().format('YYYY-MM-DD')
+    }
+
+    commmentModel.create(postData, function(err, data) {
+        if (err) throw err;
+        videoModel.findOneAndUpdate({ id: postData.videoId }, { $inc: { commentCount: 1 } }, function(err, data) {
+            if (err) throw err;
+            res.send({ ...postData, commentCount: data.commentCount += 1 });
+        })
+    })
+})
+
+router.post('/reply', function(req, res) {
+    var postData = {
+        videoId: req.body.videoId,
+        userId: req.body.userId,
+        username: req.body.username,
+        avator: req.body.avator,
+        content: req.body.content,
+        type: 'reply',
+        commentContent: req.body.commentContent,
+        commentUserId: req.body.commentUserId,
+        commentUsername: req.body.commentUsername,
+        commentAvator: req.body.commentAvator,
+        date: moment().format('YYYY-MM-DD')
+    }
+
+    commmentModel.create(postData, function(err, data) {
+        if (err) throw err;
+        commmentModel.create(postData, function(err, data) {
+            if (err) throw err;
+            videoModel.findOneAndUpdate({ id: postData.videoId }, { $inc: { commentCount: 1 } }, function(err, data) {
+                if (err) throw err;
+                res.send({ ...postData, commentCount: data.commentCount });
+            })
+        })
     })
 })
 
@@ -69,11 +128,34 @@ router.post('/publish', upload.single('file'), function(req, res) {
 
 router.post('/concern', function(req, res) {
     var postData = {
-        userId: req.query.userId,
-        concernedUserId: req.query.concernedUserId
+        userId: req.body.userId,
+        concernedUserId: req.body.concernedUserId
     }
 
     concernModel.create(postData, function(err, data) {
+        if (err) throw err;
+        res.send(data);
+    })
+})
+
+router.post('/cancelConcern', function(req, res) {
+    var postData = {
+        userId: req.body.userId,
+        concernedUserId: req.body.concernedUserId
+    }
+
+    concernModel.remove(postData, function(err, data) {
+        if (err) throw err;
+        res.send(data);
+    })
+})
+
+router.get('/comments', function(req, res) {
+    var queryCondition = {
+        videoId: req.query.videoId
+    }
+
+    commmentModel.find(queryCondition, function(err, data) {
         if (err) throw err;
         res.send(data);
     })

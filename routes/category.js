@@ -48,4 +48,15 @@ router.get('/latest', function(req, res) {
         })
 })
 
+router.get('', function(req, res) {
+    videoModel
+        .where('category').equals(req.query.category)
+        .sort({publishTime: -1})
+        .limit(10)
+        .exec(function(err, data) {
+            if (err) throw err;
+            res.send(data);
+        })
+})
+
 module.exports = router;
