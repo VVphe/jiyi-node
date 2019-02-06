@@ -37,7 +37,8 @@ router.post('/star', function(req, res) {
 router.post('/like', function(req, res) {
     var postData = {
         userId: req.body.userId,
-        videoId: req.query.videoId,
+        videoId: req.body.videoId,
+        title: req.body.title,
         subTitle: req.body.subTitle,
         authorId: req.body.authorId,
         avatorUri: req.body.avatorUri,

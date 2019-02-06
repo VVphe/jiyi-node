@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var userModel = require('../models/users');
 var concernModel = require('../models/concerns');
+var videoModel = require('../models/videos');
+var likeModel = require('../models/likes');
 
 // 这里的业务逻辑将写在 两个post 路由里 
 router.post('/login', function (req, res) {
@@ -36,6 +38,7 @@ router.get('/info', function(req, res) {
 
 router.get('/concerned', function(req, res) {
     var queryCondition = {
+        userId: req.query.userId,
         concernedUserId: req.query.concernedUserId
     }
 
@@ -72,6 +75,28 @@ router.get('/concernList', function(req, res) {
         } else {
             res.send(data);
         }
+    })
+})
+
+router.get('/works', function(req, res) {
+    var queryCondition = {
+        authorId: req.query.authorId
+    }
+
+    videoModel.find(queryCondition, null, { sort: { publishTime: -1 } }, function(err, data) {
+        if (err) throw err;
+        res.send(data);
+    })
+})
+
+router.get('/likes', function(req, res) {
+    var queryCondition = {
+        userId: req.query.userId
+    }
+
+    likeModel.find(queryCondition, null, { sort: { publishTime: -1 } }, function(err, data) {
+        if (err) throw err;
+        res.send(data);
     })
 })
 
