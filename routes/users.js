@@ -7,21 +7,43 @@ var likeModel = require('../models/likes');
 
 // 这里的业务逻辑将写在 两个post 路由里 
 router.post('/login', function (req, res) {
+    var postData = {
+        userId: req.body.userId,
+        password:req.body.password
+    }
 
+    userModel.find({ userId: postData.userId }, function(err, data) {
+        if (err) throw err;
+        if (!data || data.length == 0) {
+            res.send({message: '无此用户, 请确认账户是否正确'});
+        } else {
+            if (postData.password !== data[0].password) {
+                res.send({message: '密码不正确哦, 请重新填写～'});
+            } else {
+                res.send(data);
+            }
+        }
+    })
 });
 router.post('/register', function (req, res) {
     var postData = {
-        userId: "47843875231",
-        username: "李东",
-        password: "123456",
-        age: 18,
+        userId: req.body.userId,
+        username: req.body.username,
+        password:req.body.password,
+        age: 0,
         avator: '../../../assets/icon/page-1.png',
-        description: 'emmmmmmm'
+        description: null
     }
 
-    userModel.create(postData, function(err, data) {
-        if (err) throw err;
-        res.send(data);
+    userModel.find({ userId: postData.userId }, function(err, data) {
+        if (data.length > 0) {
+            res.send({message: '该账号已经被注册过咯～'});
+        } else {
+            userModel.create(postData, function(err, data) {
+                if (err) throw err;
+                res.send(data);
+            })
+        }
     })
 });
 
