@@ -100,6 +100,32 @@ router.get('/concernList', function(req, res) {
     })
 })
 
+router.get('/concernVideos', function(req, res) {
+    var queryCondition = {
+        userId: req.query.userId
+    }
+
+    concernModel.find(queryCondition, function(err, data) {
+        if (err) throw err;
+        if (data && data.length > 0) {
+            let promiseArr = [];
+            data.forEach(item => {
+                promiseArr.push(new Promise((resolve, reject) => {
+                    videoModel.find({ authorId: item.concernedUserId }, function(err, data) {
+                        if (err) throw err;
+                        resolve(data);
+                    })
+                }))
+            })
+            Promise.all(promiseArr).then((values) => {
+                res.send(values);
+            })
+        } else {
+            res.send(data);
+        }
+    })
+})
+
 router.get('/works', function(req, res) {
     var queryCondition = {
         authorId: req.query.authorId
@@ -117,6 +143,13 @@ router.get('/likes', function(req, res) {
     }
 
     likeModel.find(queryCondition, null, { sort: { publishTime: -1 } }, function(err, data) {
+        if (err) throw err;
+        res.send(data);
+    })
+})
+
+router.post('/desc/update', function(req, res) {
+    userModel.update({ userId: req.body.userId }, { description: req.body.description }, function(err, data) {
         if (err) throw err;
         res.send(data);
     })
