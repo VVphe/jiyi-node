@@ -5,6 +5,7 @@ var likeModel = require('../models/likes');
 var videoModel = require('../models/videos');
 var concernModel = require('../models/concerns');
 var commmentModel = require('../models/commends');
+var notificationModel = require('../models/notification');
 
 var multer = require('multer');
 var moment = require('moment');
@@ -30,6 +31,15 @@ router.post('/star', function(req, res) {
 
     starModel.create(postData, function(err, data) {
         if (err) throw err;
+        videoModel.find({ id: postData.videoId }, { authorId: 1 }, function(err, data) {
+            if (err) throw err;
+            notificationModel.create({
+                videoId: postData.videoId,
+                type: 'star',
+                userId: data[0].authorId,
+                authorId: postData.userId
+            })
+        })
         res.send(data);
     })
 })
@@ -37,7 +47,7 @@ router.post('/star', function(req, res) {
 router.post('/like', function(req, res) {
     var postData = {
         userId: req.body.userId,
-        videoId: req.body.videoId,
+        videoId: req.body.id,
         title: req.body.title,
         subTitle: req.body.subTitle,
         authorId: req.body.authorId,
@@ -54,6 +64,12 @@ router.post('/like', function(req, res) {
 
     likeModel.create(postData, function(err, data) {
         if (err) throw err;
+        notificationModel.create({
+            videoId: postData.videoId,
+            type: 'like',
+            userId: postData.authorId,
+            authorId: postData.userId
+        })
         res.send(data);
     })
 })
@@ -74,6 +90,15 @@ router.post('/comment', function(req, res) {
         videoModel.findOneAndUpdate({ id: postData.videoId }, { $inc: { commentCount: 1 } }, function(err, data) {
             if (err) throw err;
             res.send({ ...postData, commentCount: data.commentCount += 1 });
+        })
+        videoModel.find({ id: postData.videoId }, { authorId: 1 }, function(err, data) {
+            if (err) throw err;
+            notificationModel.create({
+                videoId: postData.videoId,
+                type: 'comment',
+                userId: data[0].authorId,
+                authorId: postData.userId
+            })
         })
     })
 })
@@ -101,6 +126,12 @@ router.post('/reply', function(req, res) {
                 if (err) throw err;
                 res.send({ ...postData, commentCount: data.commentCount });
             })
+        })
+        notificationModel.create({
+            videoId: postData.videoId,
+            type: 'reply',
+            userId: data.authorId,
+            authorId: postData.userId
         })
     })
 })
@@ -156,7 +187,7 @@ router.get('/comments', function(req, res) {
         videoId: req.query.videoId
     }
 
-    commmentModel.find(queryCondition, function(err, data) {
+    commmentModel.find(queryCondition, null, { sort: { date: -1 } }, function(err, data) {
         if (err) throw err;
         res.send(data);
     })
