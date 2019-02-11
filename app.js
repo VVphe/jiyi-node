@@ -12,7 +12,7 @@ var recommendRouter = require('./routes/recommend');
 var operatesRouter = require('./routes/operates');
 var categoryRouter = require('./routes/category');
 var communityRouter = require('./routes/community')
-var updateRouter = require('./routes/update');
+var uploadRouter = require('./routes/upload');
 var videoRouter = require('./routes/video');
 
 var app = express();
@@ -48,7 +48,7 @@ app.use('/recommend', recommendRouter);
 app.use('/operates', operatesRouter);
 app.use('/category', categoryRouter);
 app.use('/community', communityRouter);
-app.use('/update', updateRouter);
+app.use('/upload', uploadRouter);
 app.use('/video', videoRouter);
 
 // catch 404 and forward to error handler
