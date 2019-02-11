@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var userModel = require('../models/users');
 
 var ffmpeg = require('fluent-ffmpeg')
 var multer = require('multer');
@@ -9,7 +10,7 @@ var storage = multer.diskStorage({
       cb(null, '/Users/apple/WebApps/jiyi/images')
   },
   filename: function(req, file, cb) {
-      cb(null, 'avator' + Date.now() + '.' + file.originalname.split('.')[1]);
+      cb(null, req.body.userId + '.' + file.originalname.split('.')[1]);
   }
 })
 var upload = multer({
@@ -45,6 +46,10 @@ router.post('/avator', upload.single('imgFile'), function(req, res) {
 
   //   res.send();
   // })
+  userModel.update({ userId: req.body.userId }, { avator: req.body.userId }, function(err, data) {
+    if (err) throw err;
+    res.send(data);
+  });
 })
 
 

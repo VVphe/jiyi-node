@@ -5,6 +5,8 @@ var concernModel = require('../models/concerns');
 var videoModel = require('../models/videos');
 var likeModel = require('../models/likes');
 
+var fs = require('fs');
+
 // 这里的业务逻辑将写在 两个post 路由里 
 router.post('/login', function (req, res) {
     var postData = {
@@ -153,6 +155,21 @@ router.post('/desc/update', function(req, res) {
         if (err) throw err;
         res.send(data);
     })
+})
+
+router.get('/avator/:avatorUri', function(req, res) {
+    const avatorUri = req.params.avatorUri;
+    const path = '/Users/apple/WebApps/jiyi/images/' + avatorUri + '.jpg';
+    const stat = fs.statSync(path)
+    const fileSize = stat.size
+
+    const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'image/jpeg',
+    }
+
+    res.writeHead(200, head)
+    fs.createReadStream(path).pipe(res)
 })
 
 module.exports = router;
