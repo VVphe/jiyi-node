@@ -91,15 +91,15 @@ router.post('/comment', function(req, res) {
             if (err) throw err;
             res.send({ ...postData, commentCount: data.commentCount += 1 });
         })
-        videoModel.find({ id: postData.videoId }, { authorId: 1 }, function(err, data) {
-            if (err) throw err;
-            notificationModel.create({
-                videoId: postData.videoId,
-                type: 'comment',
-                userId: data[0].authorId,
-                authorId: postData.userId
-            })
-        })
+        // videoModel.find({ id: postData.videoId }, { authorId: 1 }, function(err, data) {
+        //     if (err) throw err;
+        //     notificationModel.create({
+        //         videoId: postData.videoId,
+        //         type: 'comment',
+        //         userId: data[0].authorId,
+        //         authorId: postData.userId
+        //     })
+        // })
     })
 })
 
@@ -118,8 +118,8 @@ router.post('/reply', function(req, res) {
         date: moment().format('YYYY-MM-DD')
     }
 
-    commmentModel.create(postData, function(err, data) {
-        if (err) throw err;
+    // commmentModel.create(postData, function(err, data) {
+    //     if (err) throw err;
         commmentModel.create(postData, function(err, data) {
             if (err) throw err;
             videoModel.findOneAndUpdate({ id: postData.videoId }, { $inc: { commentCount: 1 } }, function(err, data) {
@@ -127,13 +127,13 @@ router.post('/reply', function(req, res) {
                 res.send({ ...postData, commentCount: data.commentCount });
             })
         })
-        notificationModel.create({
-            videoId: postData.videoId,
-            type: 'reply',
-            userId: data.authorId,
-            authorId: postData.userId
-        })
-    })
+        // notificationModel.create({
+        //     videoId: postData.videoId,
+        //     type: 'reply',
+        //     userId: data.authorId,
+        //     authorId: postData.userId
+        // })
+    // })
 })
 
 router.post('/publish', upload.single('file'), function(req, res) {
@@ -189,7 +189,7 @@ router.get('/comments', function(req, res) {
 
     commmentModel.find(queryCondition, null, { sort: { date: -1 } }, function(err, data) {
         if (err) throw err;
-        res.send(data);
+        res.send(data.reverse());
     })
 })
 
