@@ -4,6 +4,7 @@ var userModel = require('../models/users');
 var concernModel = require('../models/concerns');
 var videoModel = require('../models/videos');
 var likeModel = require('../models/likes');
+var notificationModel = require('../models/notification');
 
 var fs = require('fs');
 
@@ -170,6 +171,47 @@ router.get('/avator/:avatorUri', function(req, res) {
 
     res.writeHead(200, head)
     fs.createReadStream(path).pipe(res)
+})
+
+router.get('/notification', function(req, res) {
+    notificationModel.find({ userId: req.query.userId }, function(err, data) {
+        if (err) throw err;
+        // let promiseUserArr = [];
+        // let promiseVideoArr = [];
+        // data.forEach(item => {
+        //     promiseVideoArr.push(new Promise((resolve, reject) => {
+        //         videoModel.find({ id: item.videoId }, function(err, data) {
+        //             if (err) throw err;
+        //             resolve(data);
+        //         })
+        //     }))
+        //     promiseUserArr.push(new Promise((resolve, reject) => {
+        //         userModel.find({ userId: item.userId }, function(err, data) {
+        //             if (err) throw err;
+        //             resolve(data);
+        //         })
+        //     }))
+        // })
+        // let dataCopy = data;
+        // Promise.all(promiseVideoArr).then((values) => {
+        //     values.forEach((value, index) => {
+        //         dataCopy[index].videoInfo = value[0];
+        //     })
+        //     // Promise.all(promiseUserArr).then(values => {
+        //     //     values.forEach((value, index) => {
+        //     //         data[index].username = value[0].username;
+        //     //     })
+        //     //     res.send(data);
+        //     // })
+        // })
+        // Promise.all(promiseUserArr).then(values => {
+        //     values.forEach((value, index) => {
+        //         dataCopy[index].username = value[0].username;
+        //     })
+        //     res.send(dataCopy);
+        // })
+        res.send(data);
+    })
 })
 
 module.exports = router;
