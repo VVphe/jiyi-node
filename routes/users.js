@@ -3,6 +3,7 @@ var router = express.Router();
 var userModel = require('../models/users');
 var concernModel = require('../models/concerns');
 var videoModel = require('../models/videos');
+var starModel = require('../models/stars');
 var likeModel = require('../models/likes');
 var notificationModel = require('../models/notification');
 
@@ -68,6 +69,38 @@ router.get('/concerned', function(req, res) {
     }
 
     concernModel.find(queryCondition, function(err, data) {
+        if (err) throw err;
+        if (data && data.length > 0) {
+            res.send(true);
+        } else {
+            res.send(false);
+        }
+    })
+})
+
+router.get('/stared', function(req, res) {
+    var queryCondition = {
+        userId: req.query.userId,
+        videoId: req.query.videoId
+    }
+
+    starModel.find(queryCondition, function(err, data) {
+        if (err) throw err;
+        if (data && data.length > 0) {
+            res.send(true);
+        } else {
+            res.send(false);
+        }
+    })
+})
+
+router.get('/liked', function(req, res) {
+    var queryCondition = {
+        userId: req.query.userId,
+        videoId: req.query.videoId
+    }
+
+    likeModel.find(queryCondition, function(err, data) {
         if (err) throw err;
         if (data && data.length > 0) {
             res.send(true);
