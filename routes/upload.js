@@ -4,7 +4,10 @@ var userModel = require('../models/users');
 
 var ffmpeg = require('fluent-ffmpeg')
 var multer = require('multer');
+
+var moment = require('moment');
 var fs = require('fs')
+
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
       cb(null, '/Users/apple/WebApps/jiyi/images')
@@ -15,6 +18,18 @@ var storage = multer.diskStorage({
 })
 var upload = multer({
   storage: storage
+});
+
+var storageVideo = multer.diskStorage({
+  destination: function(req, file, cb) {
+      cb(null, '/Users/apple/WebApps/jiyi/videos')
+  },
+  filename: function(req, file, cb) {
+      cb(null, new Date().getTime() + '.' + file.originalname.split('.')[1]);
+  }
+})
+var uploadVideo = multer({
+  storage: storageVideo
 });
 
 router.get('/transform', function(req, res) {
@@ -50,6 +65,11 @@ router.post('/avator', upload.single('imgFile'), function(req, res) {
     if (err) throw err;
     res.send(data);
   });
+
+})
+
+router.post('/video', uploadVideo.single('videoFile'), function(req, res) {
+  console.log(req);
 })
 
 
