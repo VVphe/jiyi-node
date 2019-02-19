@@ -1,12 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var userModel = require('../models/users');
+var videoModel = require('../models/videos');
 
 var ffmpeg = require('fluent-ffmpeg')
 var multer = require('multer');
-
-var moment = require('moment');
-var fs = require('fs')
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -70,6 +68,25 @@ router.post('/avator', upload.single('imgFile'), function(req, res) {
 
 router.post('/video', uploadVideo.single('videoFile'), function(req, res) {
   console.log(req);
+  ffmpeg(req.file.path)
+    .on('filenames', function(filenames) {
+      console.log('screenshots are ' + filenames.join(', '));
+    })
+    .on('end', function() {
+      console.log('screenshots were saved');
+    })
+    .on('error', function(err) {
+      console.log('an error happened: ' + err.message);
+    })
+    // take 2 screenshots at predefined timemarks and size
+    .takeScreenshots({ timemarks: ['50%'], size: '320x240', filename: '%b.png' }, '/Users/apple/WebApps/jiyi/thumbnails');
+    // .screenshots({
+    //   timemarks: ['50%'],
+    //   filename: req.file.path.split('.')[0] + '.png',
+    //   folder: '/Users/apple/WebApps/jiyi/thumbnails',
+    //   size: '320x240'
+    // })
+  // videoModel.update()
 })
 
 
