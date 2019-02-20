@@ -35,4 +35,19 @@ router.get('/:videoId', function(req, res) {
     file.pipe(res)
 })
 
+router.get('/thumbnail/:thumbnailUri', function(req, res) {
+    const thumbnailUri = req.params.thumbnailUri;
+    const path = '/Users/apple/WebApps/jiyi/thumbnails/' + thumbnailUri + '.png';
+    const stat = fs.statSync(path)
+    const fileSize = stat.size
+
+    const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'image/png',
+    }
+
+    res.writeHead(200, head)
+    fs.createReadStream(path).pipe(res)
+})
+
 module.exports = router;
