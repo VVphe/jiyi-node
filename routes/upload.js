@@ -80,6 +80,8 @@ router.post('/video', uploadVideo.single('videoFile'), function(req, res) {
     })
     // take 2 screenshots at predefined timemarks and size
     .takeScreenshots({ timemarks: ['50%'], size: '320x240', filename: '%b.png' }, '/Users/apple/WebApps/jiyi/thumbnails');
+
+  res.send(req.file.filename.split('.')[0]);
     // .screenshots({
     //   timemarks: ['50%'],
     //   filename: req.file.path.split('.')[0] + '.png',
