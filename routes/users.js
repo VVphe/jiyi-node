@@ -258,7 +258,7 @@ router.get('/notification', function(req, res) {
         //     })
         //     res.send(dataCopy);
         // })
-        res.send(data);
+        res.send(data ? data.reverse() : []);
     })
 })
 
