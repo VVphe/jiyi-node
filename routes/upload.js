@@ -67,21 +67,19 @@ router.post('/avator', upload.single('imgFile'), function(req, res) {
 })
 
 router.post('/video', uploadVideo.single('videoFile'), function(req, res) {
-  console.log(req);
   ffmpeg(req.file.path)
     .on('filenames', function(filenames) {
       console.log('screenshots are ' + filenames.join(', '));
     })
     .on('end', function() {
       console.log('screenshots were saved');
+      res.send(req.file.filename.split('.')[0]);
     })
     .on('error', function(err) {
       console.log('an error happened: ' + err.message);
     })
     // take 2 screenshots at predefined timemarks and size
     .takeScreenshots({ timemarks: ['50%'], size: '320x240', filename: '%b.png' }, '/Users/apple/WebApps/jiyi/thumbnails');
-
-  res.send(req.file.filename.split('.')[0]);
     // .screenshots({
     //   timemarks: ['50%'],
     //   filename: req.file.path.split('.')[0] + '.png',

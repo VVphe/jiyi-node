@@ -45,7 +45,7 @@ router.get('/', function(req, res) {
             };
             data = data.slice(0, 100);
             for (let video of data) {
-                if (resObj[categoryMap[video.category]].videos.length < 3) {
+                if (video.category && resObj[categoryMap[video.category]].videos.length < 3) {
                     // resObj[categoryMap[video.category]].videos.push()
                     resObj[categoryMap[video.category]].videos.push({
                         id: video.id,

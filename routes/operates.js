@@ -138,15 +138,17 @@ router.post('/reply', function(req, res) {
 
 router.post('/publish', upload.single('file'), function(req, res) {
     var postData = {
-        id: (new Date()).getTime(),
-        title: req.query.title,
-        subTitle: req.query.subTitle,
-        authorId: req.query.authorId,
-        avatorUri: req.query.avatorUri,
-        duration: req.query.duration,
-        category: req.query.category,
-        thumbnailUri: req.query.thumbnailUri,
-        description: req.query.description,
+        id: req.body.videoId,
+        title: req.body.title,
+        subTitle: req.body.subTitle,
+        authorId: req.body.authorId,
+        // avatorUri: req.query.avatorUri,
+        // duration: req.query.duration,
+        category: null,
+        thumbnailUri: req.body.thumbnailUri,
+        videoUri: req.body.videoUri,
+        description: req.body.description,
+        labels: [],
         commentCount: 0,
         starsCount: 0,
         publishTime: moment().format('YYYY-MM-DD')

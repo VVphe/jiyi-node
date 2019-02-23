@@ -35,7 +35,7 @@ router.post('/register', function (req, res) {
         username: req.body.username,
         password:req.body.password,
         age: 0,
-        avator: '../../../assets/icon/page-1.png',
+        avator: '../../../assets/icon/default-head.svg',
         description: null
     }
 
@@ -193,17 +193,32 @@ router.post('/desc/update', function(req, res) {
 
 router.get('/avator/:avatorUri', function(req, res) {
     const avatorUri = req.params.avatorUri;
-    const path = '/Users/apple/WebApps/jiyi/images/' + avatorUri + '.jpg';
-    const stat = fs.statSync(path)
-    const fileSize = stat.size
+    let path = '/Users/apple/WebApps/jiyi/images/' + avatorUri + '.jpg';
+    if (fs.existsSync(path)) {
+        let stat = fs.statSync(path)
+        let fileSize = stat.size
 
-    const head = {
-        'Content-Length': fileSize,
-        'Content-Type': 'image/jpeg',
+        let head = {
+            'Content-Length': fileSize,
+            'Content-Type': 'image/jpeg',
+        }
+
+        res.writeHead(200, head)
+        fs.createReadStream(path).pipe(res)
+        
+    } else {
+        path = '/Users/apple/WebApps/jiyi/images/default-head.png';
+        let stat = fs.statSync(path)
+        let fileSize = stat.size
+
+        let head = {
+            'Content-Length': fileSize,
+            'Content-Type': 'image/png',
+        }
+
+        res.writeHead(200, head)
+        fs.createReadStream(path).pipe(res)
     }
-
-    res.writeHead(200, head)
-    fs.createReadStream(path).pipe(res)
 })
 
 router.get('/notification', function(req, res) {
