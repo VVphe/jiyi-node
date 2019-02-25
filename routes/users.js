@@ -193,7 +193,8 @@ router.post('/desc/update', function(req, res) {
 
 router.get('/avator/:avatorUri', function(req, res) {
     const avatorUri = req.params.avatorUri;
-    let path = '/Users/apple/WebApps/jiyi/images/' + avatorUri + '.jpg';
+    // let path = '/Users/apple/WebApps/jiyi/images/' + avatorUri + '.jpg';
+    let path = '/root/jiyi/images/' + avatorUri + '.jpg';
     if (fs.existsSync(path)) {
         let stat = fs.statSync(path)
         let fileSize = stat.size
@@ -207,7 +208,8 @@ router.get('/avator/:avatorUri', function(req, res) {
         fs.createReadStream(path).pipe(res)
         
     } else {
-        path = '/Users/apple/WebApps/jiyi/images/default-head.png';
+        // path = '/Users/apple/WebApps/jiyi/images/default-head.png';
+        path = '/root/jiyi/images/default-head.png';
         let stat = fs.statSync(path)
         let fileSize = stat.size
 

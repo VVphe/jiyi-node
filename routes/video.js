@@ -13,7 +13,8 @@ router.get('/detail', function(req, res) {
 
 router.get('/:videoId', function(req, res) {
     const videoId = req.params.videoId;
-    const path = '/Users/apple/WebApps/jiyi/videos/' + videoId;
+    // const path = '/Users/apple/WebApps/jiyi/videos/' + videoId;
+    const path = '/root/jiyi/videos/' + videoId;
     const stat = fs.statSync(path)
     const fileSize = stat.size
     var range = req.headers.range;
@@ -37,7 +38,8 @@ router.get('/:videoId', function(req, res) {
 
 router.get('/thumbnail/:thumbnailUri', function(req, res) {
     const thumbnailUri = req.params.thumbnailUri;
-    const path = '/Users/apple/WebApps/jiyi/thumbnails/' + thumbnailUri + '.png';
+    // const path = '/Users/apple/WebApps/jiyi/thumbnails/' + thumbnailUri + '.png';
+    const path = '/root/jiyi/thumbnails/' + thumbnailUri + '.png';
     const stat = fs.statSync(path);
     const fileSize = stat.size;
 

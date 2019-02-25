@@ -20,7 +20,8 @@ var upload = multer({
 
 var storageVideo = multer.diskStorage({
   destination: function(req, file, cb) {
-      cb(null, '/Users/apple/WebApps/jiyi/videos')
+      // cb(null, '/Users/apple/WebApps/jiyi/videos')
+      cb(null, '/root/jiyi/videos')
   },
   filename: function(req, file, cb) {
       cb(null, new Date().getTime() + '.' + file.originalname.split('.')[1]);
@@ -79,7 +80,8 @@ router.post('/video', uploadVideo.single('videoFile'), function(req, res) {
       console.log('an error happened: ' + err.message);
     })
     // take 2 screenshots at predefined timemarks and size
-    .takeScreenshots({ timemarks: ['50%'], size: '320x240', filename: '%b.png' }, '/Users/apple/WebApps/jiyi/thumbnails');
+    // .takeScreenshots({ timemarks: ['50%'], size: '320x240', filename: '%b.png' }, '/Users/apple/WebApps/jiyi/thumbnails');
+    .takeScreenshots({ timemarks: ['50%'], size: '320x240', filename: '%b.png' }, '/root/jiyi/thumbnails');
     // .screenshots({
     //   timemarks: ['50%'],
     //   filename: req.file.path.split('.')[0] + '.png',
