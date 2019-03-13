@@ -8,7 +8,7 @@ var multer = require('multer');
 
 var storage = multer.diskStorage({
   destination: function(req, file, cb) {
-      cb(null, '/Users/apple/WebApps/jiyi/images')
+      cb(null, '/root/jiyi/images')
   },
   filename: function(req, file, cb) {
       cb(null, req.body.userId + '.' + file.originalname.split('.')[1]);
